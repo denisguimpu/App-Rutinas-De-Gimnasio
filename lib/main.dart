@@ -80,11 +80,11 @@ class _MyappState extends State<Myapp>{
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
-            label: 'Home',
+            label: 'Inicio',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.business),
-            label: 'Business',
+            label: 'Ejercicios',
           ),
         ],
         currentIndex: _selectedIndex,
