@@ -1,17 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_app/screens/mainscreen.dart';
-import 'package:flutter_app/screens/splashscreen.dart';
+import 'package:flutter_app/screens/exercisescreen.dart';
+import 'package:flutter_app/screens/profilesceen.dart';
+import 'package:flutter_app/screens/homescreen.dart';
+import 'package:flutter_app/views/bottomnavbar.dart';
 
 void main() {
-  runApp( MyAppstateless());
+  runApp( MyApp());
 }
-class MyAppstateless extends StatelessWidget {
+class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Fitness App',
-      home: SplashScreen(),
+      home: BottomNavBar(),
       theme: ThemeData(
         primaryColor: Color(0xFF5F5FFF),
         hintColor: Color(0XFF030047),
@@ -37,61 +39,4 @@ class MyAppstateless extends StatelessWidget {
 
   }
   
-}
-class Myapp extends StatefulWidget{
-  const Myapp({super.key});
-  @override
-  State<Myapp> createState() => _MyappState();
-}
-
-class _MyappState extends State<Myapp>{
-
-  int _selectedIndex = 0;
-  static const TextStyle optionStyle =
-  TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
-  static const List<Widget> _widgetOptions = <Widget>[
-    Text(
-      'Index 0: Inicio',
-      style: optionStyle,
-    ),
-    Text(
-      'Index 1: Ejercicios',
-      style: optionStyle,
-    ),
-  ];
-
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-  }
-
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('BottomNavigationBar Sample'),
-      ),
-      body: Center(
-        child: _widgetOptions.elementAt(_selectedIndex),
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Inicio',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.business),
-            label: 'Ejercicios',
-          ),
-        ],
-        currentIndex: _selectedIndex,
-        selectedItemColor: Colors.amber[800],
-        onTap: _onItemTapped,
-      ),
-    );
-  }
-
 }

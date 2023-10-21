@@ -1,11 +1,16 @@
 import 'package:flutter/material.dart';
-import 'mainscreen.dart';
+import 'exercisescreen.dart';
 import 'package:flutter_app/model/exercise.dart';
 
 class SplashScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        appBar: AppBar(
+          title: Text('Inicio'),
+          centerTitle: true,
+          backgroundColor: Colors.cyan,
+        ),
         body: Container(
       width: double.infinity,
       color: Colors.white,

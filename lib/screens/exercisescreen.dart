@@ -1,7 +1,9 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_app/model/excercise_view.dart';
 import 'package:flutter_app/model/exercise.dart';
-import './splashscreen.dart';
+import './homescreen.dart';
 
 class MainScreen extends StatefulWidget {
   @override
@@ -24,7 +26,7 @@ class MainScreenState extends State<MainScreen> {
       appBar: AppBar(
         title: Text('Ejercicios'),
         centerTitle: true,
-        backgroundColor: Colors.deepPurple,
+        backgroundColor: Colors.lightGreen,
       ),
       body: SafeArea(
         child: Container(
@@ -94,6 +96,7 @@ class MainScreenState extends State<MainScreen> {
               Icons.check_circle_outline,
               color: Colors.lightBlue[200],
             ),
+
       onTap: () {
         setState(() {
           exercises[index].isSelected = !exercises[index].isSelected;
@@ -103,10 +106,10 @@ class MainScreenState extends State<MainScreen> {
             selectedExercises.removeWhere(
                 (element) => element.name == exercises[index].name);
           }
-          if (selectedExercises.length==0){
-            textButton= "Cancelar";
-          } else if (selectedExercises.length>0){
-            textButton= "Añadir (${selectedExercises.length})";
+          if (selectedExercises.length == 0) {
+            textButton = "Cancelar";
+          } else if (selectedExercises.length > 0) {
+            textButton = "Añadir (${selectedExercises.length})";
           }
         });
       },
