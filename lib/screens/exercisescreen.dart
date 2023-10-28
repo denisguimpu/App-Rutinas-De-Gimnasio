@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_app/model/excercise_view.dart';
 import 'package:flutter_app/model/exercise.dart';
@@ -16,6 +14,7 @@ class MainScreenState extends State<MainScreen> {
     Exercise('Press banca', 'Pecho', "description", false),
     Exercise('Peso muerto', 'Isquiotiviales', "description", false),
   ];
+  int key_number = 0;
 
   List<Exercise> selectedExercises = [];
   String textButton = "Cancelar";
@@ -53,8 +52,7 @@ class MainScreenState extends State<MainScreen> {
                 child: SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(
-                      onPressed: () {
-                        Navigator.pop(context);
+                      onPressed: (){
                       },
                       style: ElevatedButton.styleFrom(
                         primary: Colors.cyan[500],
