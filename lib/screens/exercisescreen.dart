@@ -14,7 +14,7 @@ class MainScreenState extends State<MainScreen> {
     Exercise('Press banca', 'Pecho', "description", false),
     Exercise('Peso muerto', 'Isquiotiviales', "description", false),
   ];
-  int key_number = 0;
+
 
   List<Exercise> selectedExercises = [];
   String textButton = "Cancelar";
