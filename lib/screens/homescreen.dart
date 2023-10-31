@@ -24,10 +24,13 @@ class _SplashScreenState extends State<SplashScreen> {
 
     List<Ejercicio> ejercicios = await DB.getAll();
 
+    List<Rutina> numRutinas = await DB.getAllTitles();
+    numRutinas.forEach((element) {
 
+      Rutina rutina = new Rutina(nombre: element.nombre, ejercicios: ejercicios);
+      rutinas.add(rutina);
+    });
 
-    Rutina rutina = new Rutina(nombre: ejercicios[0].titulo, ejercicios: ejercicios);
-    rutinas.add(rutina);
 
 
 
@@ -61,7 +64,7 @@ class _SplashScreenState extends State<SplashScreen> {
                   return Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text('Título de Rutina: ${rutina?.nombre}', style: TextStyle(fontSize: 20),),
+                      Text('${rutina?.nombre}', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
                       ListView.builder(
                         shrinkWrap: true,
                         physics: NeverScrollableScrollPhysics(),

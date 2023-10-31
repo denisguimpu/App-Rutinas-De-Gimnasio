@@ -93,4 +93,13 @@ class DB {
     ));
   }
 
+   static Future<List<Rutina>> getAllTitles() async {
+     Database database = await openDB();
+     final List<Map<String,dynamic>> rutinasMap = await database.query("rutinas");
+     return List.generate(rutinasMap.length, (i) => Rutina(
+       nombre: rutinasMap[i]['nombre'], ejercicios: []
+     ));
+   }
+
+
 }
