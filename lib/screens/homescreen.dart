@@ -1,8 +1,41 @@
+import 'dart:async';
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_app/database/ejercicios_db.dart';
+import 'package:sqflite/sqflite.dart';
+import '../database/db.dart';
+import '../database/rutina_db.dart';
 import 'exercisescreen.dart';
+import 'package:path/path.dart';
 import 'package:flutter_app/model/exercise.dart';
 
-class SplashScreen extends StatelessWidget {
+class SplashScreen extends StatefulWidget {
+  @override
+  State<SplashScreen> createState() => _SplashScreenState();
+}
+
+class _SplashScreenState extends State<SplashScreen> {
+
+
+  Future<List<Rutina>> obtenerRutinasConEjercicios() async {
+    List<Rutina> rutinas = [];
+
+
+    List<Ejercicio> ejercicios = await DB.getAll();
+
+
+
+    Rutina rutina = new Rutina(nombre: ejercicios[0].titulo, ejercicios: ejercicios);
+    rutinas.add(rutina);
+
+
+
+    return rutinas;
+  }
+
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -11,50 +44,51 @@ class SplashScreen extends StatelessWidget {
           centerTitle: true,
           backgroundColor: Colors.cyan,
         ),
-        body: Container(
-      width: double.infinity,
-      color: Colors.white,
-      child: Column(
-        children: <Widget>[
-          Padding(padding: EdgeInsets.all(20)),
-          Text(
-            'Fitness App',
-            style: Theme.of(context).textTheme.headline2,
-          ),
-          Padding(padding: EdgeInsets.all(20)),
-          MaterialButton(
-            highlightColor: Theme.of(context).hintColor,
-            elevation: 10.0,
-            minWidth: 170.0,
-            height: 50.0,
-            color: Theme.of(context).primaryColor,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(8.0),
-            ),
-            child: Text(
-              'Nueva rutina',
-              style: TextStyle(color: Colors.white, fontSize: 20.0),
-            ),
-            onPressed: () {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => MainScreen()));
-            },
-          ),
-          /*
-          Padding(padding: EdgeInsets.all(20)),
-          Expanded(child: ListView.builder(itemBuilder: (context, index) {
-            return ExercisesItem(
-              exercises[index].name,
-              exercises[index].muscle,
-              exercises[index].description,
-              index,
-            );
-          })
-          ),
-          */
-        ],
-      ),
-    ));
+        body: FutureBuilder<List<Rutina>>(
+          future: obtenerRutinasConEjercicios(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return CircularProgressIndicator();
+            } else if (snapshot.hasError) {
+              return Text('Error: ${snapshot.error}');
+            } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+              return Text('No hay rutinas almacenadas.');
+            } else {
+              return ListView.builder(
+                itemCount: snapshot.data?.length,
+                itemBuilder: (context, index) {
+                  final rutina = snapshot.data?[index];
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text('Título de Rutina: ${rutina?.nombre}', style: TextStyle(fontSize: 20),),
+                      ListView.builder(
+                        shrinkWrap: true,
+                        physics: NeverScrollableScrollPhysics(),
+                        itemCount: rutina?.ejercicios.length,
+                        itemBuilder: (context, ejercicioIndex) {
+                          final ejercicio = rutina?.ejercicios[ejercicioIndex];
+                          return ListTile(
+                            title: Text(ejercicio!.name),
+                            subtitle: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text('Músculo: ${ejercicio?.muscle}'),
+                                Text('Descripción: ${ejercicio?.description}'),
+                              ],
+                            ),
+                          );
+                        },
+                      ),
+                      Divider(), // Separador entre rutinas
+                    ],
+                  );
+                },
+              );
+            }
+          },
+        ),
+    );
   }
 
   Widget ExercisesItem(

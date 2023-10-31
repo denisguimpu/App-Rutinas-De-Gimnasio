@@ -1,3 +1,4 @@
+import 'package:flutter_app/database/rutina_db.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 import 'ejercicios_db.dart';
@@ -10,30 +11,40 @@ class DB {
     return openDatabase(join(await getDatabasesPath(), 'ejercicios.db'),
         onCreate: (db, version) {
           return db.execute(
-              'CREATE TABLE ejercicios (id INTEGER PRIMARY KEY, name TEXT ,muscle TEXT,description TEXT);',
+              'CREATE TABLE ejercicios (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT ,muscle TEXT,description TEXT, titulo TEXT);',
           );
         }, version: 1);
   }
   */
 
-   static Future<Database> _openDB() async {
+   static Future<Database> openDB() async {
       final database = await openDatabase(
         join(await getDatabasesPath(), 'ejercicios.db'),
         onCreate: (db, version) {
+          
           // Crear la tabla de ejercicios
           db.execute(
-            'CREATE TABLE ejercicios (id INTEGER PRIMARY KEY, name TEXT, muscle TEXT, description TEXT);',
+            'CREATE TABLE ejercicios (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT ,muscle TEXT,description TEXT, titulo TEXT);',
           );
 
           // Crear la tabla de rutinas
           db.execute(
-            'CREATE TABLE rutinas (id INTEGER PRIMARY KEY, nombre TEXT, descripcion TEXT);',
+            'CREATE TABLE rutinas (id INTEGER PRIMARY KEY AUTOINCREMENT, nombre TEXT);',
           );
-
-          // Crear la tabla de relación entre rutinas y ejercicios
-          db.execute(
-            'CREATE TABLE rutina_ejercicio (id INTEGER PRIMARY KEY, rutina_id INTEGER, ejercicio_id INTEGER, FOREIGN KEY (rutina_id) REFERENCES rutinas (id), FOREIGN KEY (ejercicio_id) REFERENCES ejercicios (id));',
-          );
+          db.execute( '''
+                      INSERT INTO ejercicios (name, muscle, description, titulo)
+                      VALUES
+                        ('Sentadilla', 'Cuadriceps', 'Descripción de la sentadilla', 'Rutina A'),
+                        ('Press banca', 'Pecho', 'Descripción del press banca', 'Rutina B'),
+                        ('Peso muerto', 'Isquiotibiales', 'Descripción del peso muerto', 'Rutina A');
+                    ''');
+          db.execute('''
+                      INSERT INTO rutinas (nombre)
+                      VALUES
+                        ('Rutina A'),
+                        ('Rutina B');
+                    ''');
+          
         },
         version: 1,
       );
@@ -41,34 +52,45 @@ class DB {
       return database;
     }
 
+
   static Future<int> insert(Ejercicio ejercicio) async {
-    Database database = await _openDB();
+    Database database = await openDB();
 
     return database.insert("ejercicios", ejercicio.toMap());
   }
 
+   static Future<void> insertTitulo(String titulo) async {
+     Database database = await openDB();
+     var resultado = await database.rawInsert("INSERT INTO rutinas (titulo)"
+         "VALUES (${titulo})");
+   }
+
   static Future<int> delete(Ejercicio ejercicio) async {
-    Database database = await _openDB();
+    Database database = await openDB();
 
     return database.delete("ejercicios", where: "name = ?", whereArgs: [ejercicio.name]);
   }
 
+  static Future<int> insertQuery(String query)  async {
+    Database database = await openDB();
+    return database.rawInsert(query);
+  }
+
   static Future<int> update(Ejercicio ejercicio) async {
-    Database database = await _openDB();
+    Database database = await openDB();
 
     return database.update("ejercicios", ejercicio.toMap(), where: "name = ?", whereArgs: [ejercicio.name]);
   }
 
-  static Future<List> getAll() async {
-    Database database = await _openDB();
+  static Future<List<Ejercicio>> getAll() async {
+    Database database = await openDB();
     final List<Map<String,dynamic>> ejerciciosMap = await database.query("ejercicios");
     return List.generate(ejerciciosMap.length, (i) => Ejercicio(
         name: ejerciciosMap[i]['name'],
         muscle: ejerciciosMap[i]['muscle'],
         description: ejerciciosMap[i]['description'],
-        id: ejerciciosMap[i]['id'],
+        titulo: ejerciciosMap[i]['titulo'],
     ));
   }
-
 
 }

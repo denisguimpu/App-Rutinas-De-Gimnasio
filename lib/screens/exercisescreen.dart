@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_app/database/ejercicios_db.dart';
+import 'package:flutter_app/database/rutina_db.dart';
 import 'package:flutter_app/model/excercise_view.dart';
 import 'package:flutter_app/model/exercise.dart';
+import '../database/db.dart';
 import './homescreen.dart';
 
 class MainScreen extends StatefulWidget {
@@ -14,7 +17,7 @@ class MainScreenState extends State<MainScreen> {
     Exercise('Press banca', 'Pecho', "description", false),
     Exercise('Peso muerto', 'Isquiotiviales', "description", false),
   ];
-
+  TextEditingController titleController = TextEditingController();
 
   List<Exercise> selectedExercises = [];
   String textButton = "Cancelar";
@@ -31,6 +34,17 @@ class MainScreenState extends State<MainScreen> {
         child: Container(
           child: Column(
             children: [
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  children: [
+                    TextField(
+                      controller: titleController,
+                      decoration: InputDecoration(labelText: 'Titulo del ejercicio'),
+                    ),
+                  ],
+                ),
+              ),
               Expanded(
                 child: ListView.builder(
                     itemCount: exercises.length,
@@ -53,6 +67,25 @@ class MainScreenState extends State<MainScreen> {
                   width: double.infinity,
                   child: ElevatedButton(
                       onPressed: (){
+                        FocusScope.of(context).unfocus();
+                        if(titleController.text.isNotEmpty){
+                          selectedExercises.forEach((element) {
+                            Ejercicio ejercicio = new Ejercicio(name: element.name, muscle: element.muscle, description: element.description,titulo: titleController.text);
+                            DB.insert(ejercicio);
+                            DB.insertTitulo(titleController.text);
+                          });
+                        } else {
+                          showDialog(
+                            context: context,
+                            builder: (context) {
+                              return AlertDialog(
+                                title: Text('Título vacío'),
+                                content: Text('Por favor, rellene el título'),
+                              );
+                            },
+                          );
+
+                        }
                       },
                       style: ElevatedButton.styleFrom(
                         primary: Colors.cyan[500],
