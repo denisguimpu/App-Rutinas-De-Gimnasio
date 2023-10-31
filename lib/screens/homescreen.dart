@@ -19,19 +19,22 @@ class _SplashScreenState extends State<SplashScreen> {
 
 
   Future<List<Rutina>> obtenerRutinasConEjercicios() async {
+
     List<Rutina> rutinas = [];
-
-
     List<Ejercicio> ejercicios = await DB.getAll();
-
+    List<Ejercicio> ejerciciosLista = [];
     List<Rutina> numRutinas = await DB.getAllTitles();
-    numRutinas.forEach((element) {
 
-      Rutina rutina = new Rutina(nombre: element.nombre, ejercicios: ejercicios);
-      rutinas.add(rutina);
+
+    numRutinas.forEach((rutinaFor) {
+      ejercicios.forEach((ejercicioFor) {
+        if(rutinaFor.nombre == ejercicioFor.titulo){
+          ejerciciosLista.add(ejercicioFor);
+          Rutina rutina = new Rutina(nombre: rutinaFor.nombre, ejercicios: ejerciciosLista);
+          rutinas.add(rutina);
+        }
+      });
     });
-
-
 
 
     return rutinas;
