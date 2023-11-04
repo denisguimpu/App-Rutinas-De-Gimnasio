@@ -85,40 +85,68 @@ class _ProfileScreenState extends State<ProfileScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('Peso (kg):'),
+              Text(
+                'Peso (kg)',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              ),
               TextField(
                 controller: weightController,
                 keyboardType: TextInputType.number,
                 decoration: InputDecoration(labelText: 'Peso (kg)'),
               ),
-              Text('Altura (m):'),
+              SizedBox(height: 12),
+              Text(
+                'Altura (m)',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              ),
               TextField(
                 controller: heightController,
                 keyboardType: TextInputType.number,
                 decoration: InputDecoration(labelText: 'Altura (m)'),
               ),
-              Text('Circunferencia de la cintura (cm):'),
+              SizedBox(height: 12),
+              Text(
+                'Circunferencia de la cintura (cm)',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              ),
               TextField(
                 controller: waistController,
                 keyboardType: TextInputType.number,
                 decoration: InputDecoration(labelText: 'Circunferencia de la cintura (cm)'),
               ),
-              Text('Circunferencia del cuello (cm):'),
+              SizedBox(height: 12),
+              Text(
+                'Circunferencia del cuello (cm)',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              ),
               TextField(
                 controller: neckController,
                 keyboardType: TextInputType.number,
                 decoration: InputDecoration(labelText: 'Circunferencia del cuello (cm)'),
               ),
-              Text('Circunferencia de la cadera (cm):'),
+              SizedBox(height: 12),
+              Text(
+                'Circunferencia de la cadera (cm)',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              ),
               TextField(
                 controller: hipController,
                 keyboardType: TextInputType.number,
                 decoration: InputDecoration(labelText: 'Circunferencia de la cadera (cm)'),
               ),
               SizedBox(height: 16),
-              Text('BMI: $bmi'),
-              Text('Estado de Salud: $healthStatus'),
-              Text('Porcentaje de Grasa Corporal: $bodyFatPercentage%'),
+              Text(
+                'BMI: $bmi',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              ),
+              Text(
+                'Estado de Salud: $healthStatus',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              ),
+              Text(
+                'Porcentaje de Grasa Corporal: $bodyFatPercentage%',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              ),
             ],
           ),
         ),
