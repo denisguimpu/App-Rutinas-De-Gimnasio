@@ -61,10 +61,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   double calculateBodyFatPercentage(double waist, double neck, double hip, double weight, double height) {
-    // Realiza los cálculos para el porcentaje de grasa corporal
-    // Puedes implementar la fórmula deseada aquí
-    // Por ejemplo, puedes utilizar la fórmula de Navy o cualquier otra
-    return 20.0; // Valor de ejemplo, reemplázalo con el cálculo real
+    final leanBodyMass = weight - (weight * (waist + neck - hip) / 100.0);
+    final bodyFat = weight - leanBodyMass;
+    return (bodyFat / weight) * 100.0;
   }
 
   @override
@@ -85,58 +84,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                'Peso (kg)',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-              ),
-              TextField(
-                controller: weightController,
-                keyboardType: TextInputType.number,
-                decoration: InputDecoration(labelText: 'Peso (kg)'),
-              ),
-              SizedBox(height: 12),
-              Text(
-                'Altura (m)',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-              ),
-              TextField(
-                controller: heightController,
-                keyboardType: TextInputType.number,
-                decoration: InputDecoration(labelText: 'Altura (m)'),
-              ),
-              SizedBox(height: 12),
-              Text(
-                'Circunferencia de la cintura (cm)',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-              ),
-              TextField(
-                controller: waistController,
-                keyboardType: TextInputType.number,
-                decoration: InputDecoration(labelText: 'Circunferencia de la cintura (cm)'),
-              ),
-              SizedBox(height: 12),
-              Text(
-                'Circunferencia del cuello (cm)',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-              ),
-              TextField(
-                controller: neckController,
-                keyboardType: TextInputType.number,
-                decoration: InputDecoration(labelText: 'Circunferencia del cuello (cm)'),
-              ),
-              SizedBox(height: 12),
-              Text(
-                'Circunferencia de la cadera (cm)',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-              ),
-              TextField(
-                controller: hipController,
-                keyboardType: TextInputType.number,
-                decoration: InputDecoration(labelText: 'Circunferencia de la cadera (cm)'),
-              ),
+              _buildField('Peso (kg)', weightController),
+              _buildField('Altura (m)', heightController),
+              _buildField('Circunferencia de la cintura (cm)', waistController),
+              _buildField('Circunferencia del cuello (cm)', neckController),
+              _buildField('Circunferencia de la cadera (cm)', hipController),
               SizedBox(height: 16),
               Text(
-                'BMI: $bmi',
+                'BMI: ${bmi.toStringAsFixed(1)}',
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
               Text(
@@ -144,12 +99,40 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
               Text(
-                'Porcentaje de Grasa Corporal: $bodyFatPercentage%',
+                'Porcentaje de Grasa Corporal: ${bodyFatPercentage.toStringAsFixed(2)}%',
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  Widget _buildField(String title, TextEditingController controller) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            title,
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          TextFormField(
+            controller: controller,
+            keyboardType: TextInputType.number,
+            style: TextStyle(fontSize: 16),
+            decoration: InputDecoration(
+              hintText: 'Ingrese $title',
+              contentPadding: EdgeInsets.all(12),
+              border: OutlineInputBorder(),
+            ),
+          ),
+        ],
       ),
     );
   }
