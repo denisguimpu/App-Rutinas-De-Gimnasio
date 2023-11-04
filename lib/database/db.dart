@@ -29,14 +29,14 @@ class DB {
 
           // Crear la tabla de rutinas
           db.execute(
-            'CREATE TABLE rutinas (id INTEGER PRIMARY KEY AUTOINCREMENT, nombre TEXT);',
+            'CREATE TABLE rutinas (id INTEGER PRIMARY KEY AUTOINCREMENT, nombre TEXT, FOREIGN KEY (nombre) REFERENCES ejercicios(titulo));',
           );
           db.execute( '''
                       INSERT INTO ejercicios (name, muscle, description, titulo)
                       VALUES
                         ('Sentadilla', 'Cuadriceps', 'Descripción de la sentadilla', 'Rutina A'),
-                        ('Press banca', 'Pecho', 'Descripción del press banca', 'Rutina B'),
-                        ('Peso muerto', 'Isquiotibiales', 'Descripción del peso muerto', 'Rutina A');
+                        ('Press banca', 'Pecho', 'Descripción del press banca', 'Rutina A'),
+                        ('Peso muerto', 'Isquiotibiales', 'Descripción del peso muerto', 'Rutina B');
                     ''');
           db.execute('''
                       INSERT INTO rutinas (nombre)
@@ -59,10 +59,15 @@ class DB {
     return database.insert("ejercicios", ejercicio.toMap());
   }
 
-   static Future<void> insertTitulo(String titulo) async {
+   static Future<int> insertTitulo(Rutina rutina) async {
      Database database = await openDB();
-     var resultado = await database.rawInsert("INSERT INTO rutinas (titulo)"
+     /*
+     var resultado = await database.rawInsert("INSERT INTO rutinas (nombre)"
          "VALUES (${titulo})");
+
+      */
+
+     return database.insert("rutinas", rutina.toMap());
    }
 
   static Future<int> delete(Ejercicio ejercicio) async {

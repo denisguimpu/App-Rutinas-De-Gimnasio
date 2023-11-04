@@ -3,9 +3,16 @@ import 'package:flutter_app/screens/exercisescreen.dart';
 import 'package:flutter_app/screens/profilesceen.dart';
 import 'package:flutter_app/screens/homescreen.dart';
 import 'package:flutter_app/views/bottomnavbar.dart';
+import 'package:flutter_app/views/changenotifier.dart';
+import 'package:provider/provider.dart';
 
 void main() {
-  runApp( MyApp());
+  runApp(
+    ChangeNotifierProvider(
+      create: (context) => TabProvider(),
+      child: MyApp(),
+    ),
+  );
 }
 class MyApp extends StatelessWidget {
   @override

@@ -17,28 +17,60 @@ class SplashScreen extends StatefulWidget {
 
 class _SplashScreenState extends State<SplashScreen> {
 
-
+  /* ESTA MAL
   Future<List<Rutina>> obtenerRutinasConEjercicios() async {
 
     List<Rutina> rutinas = [];
     List<Ejercicio> ejercicios = await DB.getAll();
     List<Ejercicio> ejerciciosLista = [];
     List<Rutina> numRutinas = await DB.getAllTitles();
-
+    Rutina rutina = new Rutina(nombre: "", ejercicios: []);
 
     numRutinas.forEach((rutinaFor) {
       ejercicios.forEach((ejercicioFor) {
         if(rutinaFor.nombre == ejercicioFor.titulo){
           ejerciciosLista.add(ejercicioFor);
-          Rutina rutina = new Rutina(nombre: rutinaFor.nombre, ejercicios: ejerciciosLista);
-          rutinas.add(rutina);
+          rutina = new Rutina(nombre: rutinaFor.nombre, ejercicios: ejerciciosLista);
         }
       });
+      rutinas.add(rutina);
     });
+
 
 
     return rutinas;
   }
+
+   */
+
+  Future<List<Rutina>> obtenerRutinasConEjercicios() async {
+    List<Rutina> rutinas = [];
+    List<Ejercicio> ejercicios = await DB.getAll();
+    List<Rutina> numRutinas = await DB.getAllTitles();
+
+    Map<String, List<Ejercicio>> ejerciciosPorRutina = {};
+
+    ejercicios.forEach((ejercicioFor) {
+      final rutinaNombre = ejercicioFor.titulo;
+      if (!ejerciciosPorRutina.containsKey(rutinaNombre)) {
+        ejerciciosPorRutina[rutinaNombre] = [];
+      }
+      ejerciciosPorRutina[rutinaNombre]!.add(ejercicioFor); // Añadir "!" para indicar que no puede ser nulo
+    });
+
+    numRutinas.forEach((rutinaFor) {
+      final rutinaNombre = rutinaFor.nombre;
+      if (ejerciciosPorRutina.containsKey(rutinaNombre)) {
+        final ejerciciosLista = ejerciciosPorRutina[rutinaNombre]!; // Añadir "!" para indicar que no puede ser nulo
+        final rutina = Rutina(nombre: rutinaNombre, ejercicios: ejerciciosLista);
+        rutinas.add(rutina);
+      }
+    });
+
+    return rutinas;
+  }
+
+
 
 
 
@@ -63,24 +95,24 @@ class _SplashScreenState extends State<SplashScreen> {
               return ListView.builder(
                 itemCount: snapshot.data?.length,
                 itemBuilder: (context, index) {
-                  final rutina = snapshot.data?[index];
+                  final rutinaLV = snapshot.data?[index];
                   return Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text('${rutina?.nombre}', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                      Text('${rutinaLV?.nombre}', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
                       ListView.builder(
                         shrinkWrap: true,
                         physics: NeverScrollableScrollPhysics(),
-                        itemCount: rutina?.ejercicios.length,
+                        itemCount: rutinaLV?.ejercicios.length,
                         itemBuilder: (context, ejercicioIndex) {
-                          final ejercicio = rutina?.ejercicios[ejercicioIndex];
+                          final ejercicioLV = rutinaLV?.ejercicios[ejercicioIndex];
                           return ListTile(
-                            title: Text(ejercicio!.name),
+                            title: Text(ejercicioLV!.name),
                             subtitle: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text('Músculo: ${ejercicio?.muscle}'),
-                                Text('Descripción: ${ejercicio?.description}'),
+                                Text('Músculo: ${ejercicioLV?.muscle}'),
+                                Text('Descripción: ${ejercicioLV?.description}'),
                               ],
                             ),
                           );
@@ -101,10 +133,4 @@ class _SplashScreenState extends State<SplashScreen> {
       String name, String muscle, String description, int index) {
     return ListTile();
   }
-
-  List<Exercise> exercises = [
-    Exercise('Sentadilla', 'Cuadriceps', "description", false),
-    Exercise('Press banca', 'Pecho', "description", false),
-    Exercise('Peso muerto', 'Isquiotiviales', "description", false),
-  ];
 }

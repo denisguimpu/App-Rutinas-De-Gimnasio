@@ -3,7 +3,10 @@ import 'package:flutter_app/database/ejercicios_db.dart';
 import 'package:flutter_app/database/rutina_db.dart';
 import 'package:flutter_app/model/excercise_view.dart';
 import 'package:flutter_app/model/exercise.dart';
+import 'package:provider/provider.dart';
 import '../database/db.dart';
+import '../views/bottomnavbar.dart';
+import '../views/changenotifier.dart';
 import './homescreen.dart';
 
 class MainScreen extends StatefulWidget {
@@ -40,7 +43,8 @@ class MainScreenState extends State<MainScreen> {
                   children: [
                     TextField(
                       controller: titleController,
-                      decoration: InputDecoration(labelText: 'Titulo del ejercicio'),
+                      decoration:
+                          InputDecoration(labelText: 'Titulo del ejercicio'),
                     ),
                   ],
                 ),
@@ -66,14 +70,27 @@ class MainScreenState extends State<MainScreen> {
                 child: SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(
-                      onPressed: (){
+                      onPressed: () {
                         FocusScope.of(context).unfocus();
-                        if(titleController.text.isNotEmpty){
+                        if (titleController.text.isNotEmpty &&
+                            selectedExercises.length != 0) {
+                          Rutina rutina = new Rutina(
+                              nombre: titleController.text, ejercicios: []);
+                          DB.insertTitulo(rutina);
                           selectedExercises.forEach((element) {
-                            Ejercicio ejercicio = new Ejercicio(name: element.name, muscle: element.muscle, description: element.description,titulo: titleController.text);
+                            Ejercicio ejercicio = new Ejercicio(
+                                name: element.name,
+                                muscle: element.muscle,
+                                description: element.description,
+                                titulo: titleController.text);
                             DB.insert(ejercicio);
-                            DB.insertTitulo(titleController.text);
                           });
+                          selectedExercises = [];
+                          Provider.of<TabProvider>(context, listen: false)
+                              .updateSelectedIndex(0);
+                        } else if (selectedExercises.length == 0) {
+                          Provider.of<TabProvider>(context, listen: false)
+                              .updateSelectedIndex(0);
                         } else {
                           showDialog(
                             context: context,
@@ -84,7 +101,6 @@ class MainScreenState extends State<MainScreen> {
                               );
                             },
                           );
-
                         }
                       },
                       style: ElevatedButton.styleFrom(
@@ -127,7 +143,6 @@ class MainScreenState extends State<MainScreen> {
               Icons.check_circle_outline,
               color: Colors.lightBlue[200],
             ),
-
       onTap: () {
         setState(() {
           exercises[index].isSelected = !exercises[index].isSelected;
