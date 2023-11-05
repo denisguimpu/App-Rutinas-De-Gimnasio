@@ -91,7 +91,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               _buildField('Circunferencia de la cadera (cm)', hipController),
               SizedBox(height: 16),
               Text(
-                'BMI: ${bmi.toStringAsFixed(1)}',
+                'IMC: ${bmi.toStringAsFixed(1)}',
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
               Text(
