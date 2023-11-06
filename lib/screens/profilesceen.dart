@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 
+import '../database/db.dart';
+import '../database/userData.dart';
+
 class ProfileScreen extends StatefulWidget {
   @override
   _ProfileScreenState createState() => _ProfileScreenState();
@@ -21,17 +24,26 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   void initState() {
     super.initState();
-    weightController.text = weight.toString();
-    heightController.text = height.toString();
-    waistController.text = waist.toString();
-    neckController.text = neck.toString();
-    hipController.text = hip.toString();
+    _loadUserData(); // Cargar datos del usuario al iniciar la pantalla
+  }
 
-    weightController.addListener(updateValues);
-    heightController.addListener(updateValues);
-    waistController.addListener(updateValues);
-    neckController.addListener(updateValues);
-    hipController.addListener(updateValues);
+  void _loadUserData() async {
+    final userData = await DB.getUserData();
+    if (userData != null) {
+      // Actualizar los valores de los campos y los controladores de texto
+      setState(() {
+        weight = userData.weight;
+        height = userData.height;
+        waist = userData.waist;
+        neck = userData.neck;
+        hip = userData.hip;
+        weightController.text = weight.toString();
+        heightController.text = height.toString();
+        waistController.text = waist.toString();
+        neckController.text = neck.toString();
+        hipController.text = hip.toString();
+      });
+    }
   }
 
   void updateValues() {
@@ -42,6 +54,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
       neck = double.parse(neckController.text);
       hip = double.parse(hipController.text);
     });
+    DB.saveUserData(UserData(
+      weight: weight,
+      height: height,
+      waist: waist,
+      neck: neck,
+      hip: hip,
+    ));
   }
 
   double calculateBMI(double weight, double height) {

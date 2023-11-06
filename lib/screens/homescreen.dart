@@ -23,13 +23,13 @@ class _SplashScreenState extends State<SplashScreen> {
       if (!ejerciciosPorRutina.containsKey(rutinaNombre)) {
         ejerciciosPorRutina[rutinaNombre] = [];
       }
-      ejerciciosPorRutina[rutinaNombre]!.add(ejercicioFor); // Añadir "!" para indicar que no puede ser nulo
+      ejerciciosPorRutina[rutinaNombre]!.add(ejercicioFor);
     });
 
     numRutinas.forEach((rutinaFor) {
       final rutinaNombre = rutinaFor.nombre;
       if (ejerciciosPorRutina.containsKey(rutinaNombre)) {
-        final ejerciciosLista = ejerciciosPorRutina[rutinaNombre]!; // Añadir "!" para indicar que no puede ser nulo
+        final ejerciciosLista = ejerciciosPorRutina[rutinaNombre]!;
         final rutina = Rutina(nombre: rutinaNombre, ejercicios: ejerciciosLista);
         rutinas.add(rutina);
       }
@@ -65,12 +65,10 @@ class _SplashScreenState extends State<SplashScreen> {
                   margin: EdgeInsets.all(8),
                   child: InkWell(
                     onTap: () {
-                      if (rutinaLV != null) {
                         Navigator.of(context).push(MaterialPageRoute(
                           builder: (context) =>
                               RutinaDetalleScreen(rutina: rutinaLV),
                         ));
-                      }
                     },
                     child: Padding(
                       padding: EdgeInsets.all(16),
@@ -86,19 +84,9 @@ class _SplashScreenState extends State<SplashScreen> {
                             'Ejercicios:',
                             style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                           ),
-                          Column(
-                            children: rutinaLV!.ejercicios.map((ejercicio) {
-                              return ListTile(
-                                title: Text(ejercicio.name),
-                                subtitle: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text('Músculo: ${ejercicio.muscle}'),
-                                    Text('Descripción: ${ejercicio.description}'),
-                                  ],
-                                ),
-                              );
-                            }).toList(),
+                          Text(
+                            rutinaLV!.ejercicios.map((ejercicio) => ejercicio.name).join('\n'),
+                            style: TextStyle(fontSize: 16),
                           ),
                         ],
                       ),
