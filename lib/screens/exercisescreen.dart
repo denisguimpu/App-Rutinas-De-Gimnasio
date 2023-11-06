@@ -297,8 +297,7 @@ class MainScreenState extends State<MainScreen> {
                   child: ElevatedButton(
                     onPressed: () {
                       FocusScope.of(context).unfocus();
-                      if (titleController.text.isNotEmpty &&
-                          selectedExercises.length != 0) {
+                      if (titleController.text.isNotEmpty && selectedExercises.length != 0) {
                         Rutina rutina = new Rutina(
                             nombre: titleController.text, ejercicios: []);
                         DB.insertTitulo(rutina);
@@ -310,12 +309,26 @@ class MainScreenState extends State<MainScreen> {
                               titulo: titleController.text);
                           DB.insert(ejercicio);
                         });
-                        selectedExercises = [];
-                        Provider.of<TabProvider>(context, listen: false)
-                            .updateSelectedIndex(0);
+                        // Desseleccionar ejercicios después de guardar
+                        selectedExercises.clear();
+
+                        // Deseleccionar ejercicios en la lista exercises
+                        for (int i = 0; i < exercises.length; i++) {
+                          exercises[i].isSelected = false;
+                        }
+
+                        // Actualizar el estado para reflejar los cambios
+                        setState(() {
+                          textButton = "Cancelar"; // Actualiza el texto del botón
+                        });
+                        Provider.of<TabProvider>(context, listen: false).updateSelectedIndex(0);
+                        // Vaciar el campo del título después de guardar
+                        titleController.clear();
                       } else if (selectedExercises.length == 0) {
-                        Provider.of<TabProvider>(context, listen: false)
-                            .updateSelectedIndex(0);
+                        setState(() {
+                          textButton = "Cancelar"; // Restaura el texto del botón a "Cancelar"
+                        });
+                        Provider.of<TabProvider>(context, listen: false).updateSelectedIndex(0);
                       } else {
                         showDialog(
                           context: context,
@@ -328,6 +341,7 @@ class MainScreenState extends State<MainScreen> {
                         );
                       }
                     },
+
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.grey[700],
                     ),
