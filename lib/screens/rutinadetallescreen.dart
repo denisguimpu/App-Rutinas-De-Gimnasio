@@ -11,26 +11,53 @@ class RutinaDetalleScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(rutina.nombre),
+        backgroundColor: Colors.black,
       ),
-      body: ListView.builder(
-        itemCount: rutina.ejercicios.length,
-        itemBuilder: (context, ejercicioIndex) {
-          final ejercicioLV = rutina.ejercicios[ejercicioIndex];
-          return Card(
-            elevation: 3, // Sombra del card
-            margin: EdgeInsets.all(8), // Márgenes alrededor del card
-            child: ListTile(
-              title: Text(ejercicioLV.name),
-              subtitle: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text('Músculo: ${ejercicioLV.muscle}'),
-                  Text('Descripción: ${ejercicioLV.description}'),
-                ],
+      body: Container(
+        color: Colors.grey[900], // Cambia el color de fondo a negro
+        child: ListView.builder(
+          itemCount: rutina.ejercicios.length,
+          itemBuilder: (context, ejercicioIndex) {
+            final ejercicioLV = rutina.ejercicios[ejercicioIndex];
+            return Card(
+              elevation: 5, // Sombra del card
+              margin: EdgeInsets.all(8), // Márgenes alrededor del card
+              color: Colors.grey[850], // Cambia el color de fondo del Card a gris oscuro
+              child: Padding(
+                padding: EdgeInsets.all(16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      ejercicioLV.name,
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white, // Cambia el color del texto a blanco
+                      ),
+                    ),
+                    SizedBox(height: 8),
+                    Text(
+                      '${ejercicioLV.muscle}',
+                      style: TextStyle(
+                        fontWeight: FontWeight.w500,
+                        fontSize: 16,
+                        color: Colors.white, // Cambia el color del texto a blanco
+                      ),
+                    ),
+                    Text(
+                      'Descripción: ${ejercicioLV.description}',
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: Colors.white, // Cambia el color del texto a blanco
+                      ),
+                    ),
+                  ],
+                ),
               ),
-            ),
-          );
-        },
+            );
+          },
+        ),
       ),
     );
   }

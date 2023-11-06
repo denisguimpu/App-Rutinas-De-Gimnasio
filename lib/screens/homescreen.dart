@@ -44,8 +44,9 @@ class _SplashScreenState extends State<SplashScreen> {
       appBar: AppBar(
         title: Text('Inicio'),
         centerTitle: true,
-        backgroundColor: Colors.cyan,
+        backgroundColor: Colors.black, // Cambia el color del appBar a negro
       ),
+      backgroundColor: Colors.grey[900],
       body: FutureBuilder<List<Rutina>>(
         future: obtenerRutinasConEjercicios(),
         builder: (context, snapshot) {
@@ -63,12 +64,13 @@ class _SplashScreenState extends State<SplashScreen> {
                 return Card(
                   elevation: 3,
                   margin: EdgeInsets.all(8),
+                  color: Colors.grey[850], // Cambia el color del Card a grey[850]
                   child: InkWell(
                     onTap: () {
-                        Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) =>
-                              RutinaDetalleScreen(rutina: rutinaLV),
-                        ));
+                      Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) =>
+                            RutinaDetalleScreen(rutina: rutinaLV),
+                      ));
                     },
                     child: Padding(
                       padding: EdgeInsets.all(16),
@@ -77,16 +79,16 @@ class _SplashScreenState extends State<SplashScreen> {
                         children: [
                           Text(
                             '${rutinaLV?.nombre}',
-                            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white), // Cambia el color del texto a blanco
                           ),
                           SizedBox(height: 8),
                           Text(
                             'Ejercicios:',
-                            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white), // Cambia el color del texto a blanco
                           ),
                           Text(
                             rutinaLV!.ejercicios.map((ejercicio) => ejercicio.name).join('\n'),
-                            style: TextStyle(fontSize: 16),
+                            style: TextStyle(fontSize: 16, color: Colors.white), // Cambia el color del texto a blanco
                           ),
                         ],
                       ),

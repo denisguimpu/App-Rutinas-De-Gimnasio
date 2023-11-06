@@ -95,8 +95,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
       appBar: AppBar(
         title: Text('Perfil'),
         centerTitle: true,
-        backgroundColor: Colors.deepPurple,
+        backgroundColor: Colors.black, // Cambia el color del fondo a grey[900]
       ),
+      backgroundColor: Colors.grey[900],
       body: SingleChildScrollView(
         child: Container(
           padding: EdgeInsets.all(16.0),
@@ -111,15 +112,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
               SizedBox(height: 16),
               Text(
                 'IMC: ${bmi.toStringAsFixed(1)}',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white), // Cambia el color de las letras a blanco
               ),
               Text(
                 'Estado de Salud: $healthStatus',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white), // Cambia el color de las letras a blanco
               ),
               Text(
                 'Porcentaje de Grasa Corporal: ${bodyFatPercentage.toStringAsFixed(2)}%',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white), // Cambia el color de las letras a blanco
               ),
             ],
           ),
@@ -139,16 +140,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
             style: TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.bold,
+              color: Colors.white, // Cambia el color de las letras a blanco
             ),
           ),
           TextFormField(
             controller: controller,
             keyboardType: TextInputType.number,
-            style: TextStyle(fontSize: 16),
+            style: TextStyle(fontSize: 16, color: Colors.black), // Cambia el color de las letras a blanco
             decoration: InputDecoration(
               hintText: 'Ingrese $title',
               contentPadding: EdgeInsets.all(12),
               border: OutlineInputBorder(),
+              fillColor: Colors.white, // Cambia el color de fondo a blanco
+              filled: true, // Habilita el fondo lleno
             ),
           ),
         ],

@@ -6,7 +6,6 @@ import 'package:provider/provider.dart';
 import '../database/db.dart';
 import '../views/changenotifier.dart';
 
-
 class MainScreen extends StatefulWidget {
   @override
   MainScreenState createState() => MainScreenState();
@@ -240,6 +239,7 @@ class MainScreenState extends State<MainScreen> {
         'La sentadilla frontal se realiza con la barra en la parte frontal de los hombros. Baja y sube el cuerpo como en una sentadilla estándar, pero con énfasis en los cuádriceps.',
         false),
   ];
+
   TextEditingController titleController = TextEditingController();
 
   List<Exercise> selectedExercises = [];
@@ -251,8 +251,9 @@ class MainScreenState extends State<MainScreen> {
       appBar: AppBar(
         title: Text('Ejercicios'),
         centerTitle: true,
-        backgroundColor: Colors.lightGreen,
+        backgroundColor: Colors.black,
       ),
+      backgroundColor: Colors.grey[900],
       body: SafeArea(
         child: Container(
           child: Column(
@@ -263,24 +264,28 @@ class MainScreenState extends State<MainScreen> {
                   children: [
                     TextField(
                       controller: titleController,
-                      decoration:
-                          InputDecoration(labelText: 'Titulo del ejercicio'),
+                      decoration: InputDecoration(
+                        labelText: 'Titulo del ejercicio',
+                        labelStyle: TextStyle(color: Colors.white),
+                      ),
+                      style: TextStyle(color: Colors.white),
                     ),
                   ],
                 ),
               ),
               Expanded(
                 child: ListView.builder(
-                    itemCount: exercises.length,
-                    itemBuilder: (context, index) {
-                      return ExcercisesItem(
-                        exercises[index].name,
-                        exercises[index].muscle,
-                        exercises[index].description,
-                        exercises[index].isSelected,
-                        index,
-                      );
-                    }),
+                  itemCount: exercises.length,
+                  itemBuilder: (context, index) {
+                    return ExcercisesItem(
+                      exercises[index].name,
+                      exercises[index].muscle,
+                      exercises[index].description,
+                      exercises[index].isSelected,
+                      index,
+                    );
+                  },
+                ),
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(
@@ -290,46 +295,47 @@ class MainScreenState extends State<MainScreen> {
                 child: SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(
-                      onPressed: () {
-                        FocusScope.of(context).unfocus();
-                        if (titleController.text.isNotEmpty &&
-                            selectedExercises.length != 0) {
-                          Rutina rutina = new Rutina(
-                              nombre: titleController.text, ejercicios: []);
-                          DB.insertTitulo(rutina);
-                          selectedExercises.forEach((element) {
-                            Ejercicio ejercicio = new Ejercicio(
-                                name: element.name,
-                                muscle: element.muscle,
-                                description: element.description,
-                                titulo: titleController.text);
-                            DB.insert(ejercicio);
-                          });
-                          selectedExercises = [];
-                          Provider.of<TabProvider>(context, listen: false)
-                              .updateSelectedIndex(0);
-                        } else if (selectedExercises.length == 0) {
-                          Provider.of<TabProvider>(context, listen: false)
-                              .updateSelectedIndex(0);
-                        } else {
-                          showDialog(
-                            context: context,
-                            builder: (context) {
-                              return AlertDialog(
-                                title: Text('Título vacío'),
-                                content: Text('Por favor, rellene el título'),
-                              );
-                            },
-                          );
-                        }
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.cyan[500],
-                      ),
-                      child: Text(
-                        textButton,
-                        style: TextStyle(color: Colors.white, fontSize: 18),
-                      )),
+                    onPressed: () {
+                      FocusScope.of(context).unfocus();
+                      if (titleController.text.isNotEmpty &&
+                          selectedExercises.length != 0) {
+                        Rutina rutina = new Rutina(
+                            nombre: titleController.text, ejercicios: []);
+                        DB.insertTitulo(rutina);
+                        selectedExercises.forEach((element) {
+                          Ejercicio ejercicio = new Ejercicio(
+                              name: element.name,
+                              muscle: element.muscle,
+                              description: element.description,
+                              titulo: titleController.text);
+                          DB.insert(ejercicio);
+                        });
+                        selectedExercises = [];
+                        Provider.of<TabProvider>(context, listen: false)
+                            .updateSelectedIndex(0);
+                      } else if (selectedExercises.length == 0) {
+                        Provider.of<TabProvider>(context, listen: false)
+                            .updateSelectedIndex(0);
+                      } else {
+                        showDialog(
+                          context: context,
+                          builder: (context) {
+                            return AlertDialog(
+                              title: Text('Título vacío'),
+                              content: Text('Por favor, rellene el título'),
+                            );
+                          },
+                        );
+                      }
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.grey[700],
+                    ),
+                    child: Text(
+                      textButton,
+                      style: TextStyle(color: Colors.white, fontSize: 18),
+                    ),
+                  ),
                 ),
               ),
             ],
@@ -341,44 +347,56 @@ class MainScreenState extends State<MainScreen> {
 
   Widget ExcercisesItem(String name, String muscle, String description,
       bool isSelected, int index) {
-    return ListTile(
-      leading: CircleAvatar(
-        backgroundColor: Colors.cyan[700],
-        child: Icon(
-          Icons.person_outline_outlined,
-          color: Colors.white,
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0), // Agrega margen vertical
+      child: Card(
+        color: Colors.grey[800], // Establece el fondo gris al Card
+        child: ListTile(
+          leading: CircleAvatar(
+            backgroundColor: Colors.grey[700],
+            child: Icon(
+              Icons.person_outline_outlined,
+              color: Colors.white,
+            ),
+          ),
+          title: Text(
+            name,
+            style: TextStyle(
+              fontWeight: FontWeight.w500,
+              color: Colors.white,
+            ),
+          ),
+          subtitle: Text(
+            muscle,
+            style: TextStyle(color: Colors.white),
+          ),
+          trailing: isSelected
+              ? Icon(
+            Icons.check_circle,
+            color: Colors.white,
+          )
+              : Icon(
+            Icons.check_circle_outline,
+            color: Colors.white,
+          ),
+          onTap: () {
+            setState(() {
+              exercises[index].isSelected = !exercises[index].isSelected;
+              if (exercises[index].isSelected == true) {
+                selectedExercises.add(Exercise(name, muscle, description, true));
+              } else if (exercises[index].isSelected == false) {
+                selectedExercises.removeWhere(
+                        (element) => element.name == exercises[index].name);
+              }
+              if (selectedExercises.length == 0) {
+                textButton = "Cancelar";
+              } else if (selectedExercises.length > 0) {
+                textButton = "Añadir (${selectedExercises.length})";
+              }
+            });
+          },
         ),
       ),
-      title: Text(
-        name,
-        style: TextStyle(fontWeight: FontWeight.w500),
-      ),
-      subtitle: Text(muscle),
-      trailing: isSelected
-          ? Icon(
-              Icons.check_circle,
-              color: Colors.lightBlue,
-            )
-          : Icon(
-              Icons.check_circle_outline,
-              color: Colors.lightBlue[200],
-            ),
-      onTap: () {
-        setState(() {
-          exercises[index].isSelected = !exercises[index].isSelected;
-          if (exercises[index].isSelected == true) {
-            selectedExercises.add(Exercise(name, muscle, description, true));
-          } else if (exercises[index].isSelected == false) {
-            selectedExercises.removeWhere(
-                (element) => element.name == exercises[index].name);
-          }
-          if (selectedExercises.length == 0) {
-            textButton = "Cancelar";
-          } else if (selectedExercises.length > 0) {
-            textButton = "Añadir (${selectedExercises.length})";
-          }
-        });
-      },
     );
   }
 }
