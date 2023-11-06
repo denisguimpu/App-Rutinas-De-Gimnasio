@@ -1,14 +1,9 @@
-import 'dart:async';
-import 'dart:async';
-
 import 'package:flutter/material.dart';
-import 'package:flutter_app/database/ejercicios_db.dart';
-import 'package:sqflite/sqflite.dart';
-import '../database/db.dart';
-import '../database/rutina_db.dart';
-import 'exercisescreen.dart';
-import 'package:path/path.dart';
-import 'package:flutter_app/model/exercise.dart';
+import 'package:flutter_app/database/rutina_db.dart';
+import 'package:flutter_app/database/db.dart';
+import 'package:flutter_app/screens/rutinadetallescreen.dart';
+
+import '../database/ejercicios_db.dart';
 
 class SplashScreen extends StatefulWidget {
   @override
@@ -16,33 +11,6 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
-
-  /* ESTA MAL
-  Future<List<Rutina>> obtenerRutinasConEjercicios() async {
-
-    List<Rutina> rutinas = [];
-    List<Ejercicio> ejercicios = await DB.getAll();
-    List<Ejercicio> ejerciciosLista = [];
-    List<Rutina> numRutinas = await DB.getAllTitles();
-    Rutina rutina = new Rutina(nombre: "", ejercicios: []);
-
-    numRutinas.forEach((rutinaFor) {
-      ejercicios.forEach((ejercicioFor) {
-        if(rutinaFor.nombre == ejercicioFor.titulo){
-          ejerciciosLista.add(ejercicioFor);
-          rutina = new Rutina(nombre: rutinaFor.nombre, ejercicios: ejerciciosLista);
-        }
-      });
-      rutinas.add(rutina);
-    });
-
-
-
-    return rutinas;
-  }
-
-   */
-
   Future<List<Rutina>> obtenerRutinasConEjercicios() async {
     List<Rutina> rutinas = [];
     List<Ejercicio> ejercicios = await DB.getAll();
@@ -70,67 +38,78 @@ class _SplashScreenState extends State<SplashScreen> {
     return rutinas;
   }
 
-
-
-
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: Text('Inicio'),
-          centerTitle: true,
-          backgroundColor: Colors.cyan,
-        ),
-        body: FutureBuilder<List<Rutina>>(
-          future: obtenerRutinasConEjercicios(),
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return CircularProgressIndicator();
-            } else if (snapshot.hasError) {
-              return Text('Error: ${snapshot.error}');
-            } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-              return Text('No hay rutinas almacenadas.');
-            } else {
-              return ListView.builder(
-                itemCount: snapshot.data?.length,
-                itemBuilder: (context, index) {
-                  final rutinaLV = snapshot.data?[index];
-                  return Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text('${rutinaLV?.nombre}', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-                      ListView.builder(
-                        shrinkWrap: true,
-                        physics: NeverScrollableScrollPhysics(),
-                        itemCount: rutinaLV?.ejercicios.length,
-                        itemBuilder: (context, ejercicioIndex) {
-                          final ejercicioLV = rutinaLV?.ejercicios[ejercicioIndex];
-                          return ListTile(
-                            title: Text(ejercicioLV!.name),
-                            subtitle: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text('Músculo: ${ejercicioLV?.muscle}'),
-                                Text('Descripción: ${ejercicioLV?.description}'),
-                              ],
-                            ),
-                          );
-                        },
+      appBar: AppBar(
+        title: Text('Inicio'),
+        centerTitle: true,
+        backgroundColor: Colors.cyan,
+      ),
+      body: FutureBuilder<List<Rutina>>(
+        future: obtenerRutinasConEjercicios(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasError) {
+            return Center(child: Text('Error: ${snapshot.error}'));
+          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+            return Center(child: Text('No hay rutinas almacenadas.'));
+          } else {
+            return ListView.builder(
+              itemCount: snapshot.data?.length,
+              itemBuilder: (context, index) {
+                final rutinaLV = snapshot.data?[index];
+                return Card(
+                  elevation: 3,
+                  margin: EdgeInsets.all(8),
+                  child: InkWell(
+                    onTap: () {
+                      if (rutinaLV != null) {
+                        Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) =>
+                              RutinaDetalleScreen(rutina: rutinaLV),
+                        ));
+                      }
+                    },
+                    child: Padding(
+                      padding: EdgeInsets.all(16),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            '${rutinaLV?.nombre}',
+                            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                          ),
+                          SizedBox(height: 8),
+                          Text(
+                            'Ejercicios:',
+                            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                          ),
+                          Column(
+                            children: rutinaLV!.ejercicios.map((ejercicio) {
+                              return ListTile(
+                                title: Text(ejercicio.name),
+                                subtitle: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text('Músculo: ${ejercicio.muscle}'),
+                                    Text('Descripción: ${ejercicio.description}'),
+                                  ],
+                                ),
+                              );
+                            }).toList(),
+                          ),
+                        ],
                       ),
-                      Divider(), // Separador entre rutinas
-                    ],
-                  );
-                },
-              );
-            }
-          },
-        ),
+                    ),
+                  ),
+                );
+              },
+            );
+          }
+        },
+      ),
     );
-  }
-
-  Widget ExercisesItem(
-      String name, String muscle, String description, int index) {
-    return ListTile();
   }
 }
