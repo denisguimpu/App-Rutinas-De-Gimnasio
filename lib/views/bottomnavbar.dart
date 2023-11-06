@@ -28,27 +28,30 @@ class _BottomNavBarState extends State<BottomNavBar> {
         children: screens,
       ),
       bottomNavigationBar: BottomNavigationBar(
-        type: BottomNavigationBarType.shifting,
+        type: BottomNavigationBarType.fixed,
+        backgroundColor: Colors.grey[700],
+        selectedItemColor: Colors.white,
+        unselectedItemColor: Colors.white,
         currentIndex: tabProvider.selectedIndex, // Usar el valor de selectedIndex
         onTap: (value) {
           tabProvider.updateSelectedIndex(value);
         },
         items: [
           BottomNavigationBarItem(
-            icon: Icon(Icons.home_outlined),
-            activeIcon: Icon(Icons.home),
+            icon: Icon(Icons.home_outlined, color: Colors.amber),
+            activeIcon: Icon(Icons.home, color: Colors.amber),
             label: 'Inicio',
             backgroundColor: Colors.grey[800],
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.add_circle_outline),
-            activeIcon: Icon(Icons.add_circle_outlined),
+            icon: Icon(Icons.add_circle_outline, color: Colors.amber),
+            activeIcon: Icon(Icons.add_circle_outlined, color: Colors.amber),
             label: 'Ejercicios',
             backgroundColor: Colors.grey[800],
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.person_outline),
-            activeIcon: Icon(Icons.person),
+            icon: Icon(Icons.person_outline, color: Colors.amber),
+            activeIcon: Icon(Icons.person, color: Colors.amber,),
             label: 'Perfil',
             backgroundColor: Colors.grey[800],
           ),

@@ -42,11 +42,11 @@ class RutinaDetalleScreen extends StatelessWidget {
                       style: TextStyle(
                         fontWeight: FontWeight.w500,
                         fontSize: 16,
-                        color: Colors.white, // Cambia el color del texto a blanco
+                        color: Colors.teal[300], // Cambia el color del texto a blanco
                       ),
                     ),
                     Text(
-                      'Descripción: ${ejercicioLV.description}',
+                      '${ejercicioLV.description}',
                       style: TextStyle(
                         fontSize: 16,
                         color: Colors.white, // Cambia el color del texto a blanco
