@@ -33,12 +33,42 @@ class _ProfileScreenState extends State<ProfileScreen> {
     }
   }
 
+  String getHealthStatus(double bmi) {
+    if (bmi < 18.5) {
+      return 'Bajo peso';
+    } else if (bmi >= 18.5 && bmi < 24.9) {
+      return 'Peso normal';
+    } else if (bmi >= 25 && bmi < 29.9) {
+      return 'Sobrepeso';
+    } else {
+      return 'Obesidad';
+    }
+  }
+
+  double calculateBMI(double weight, double height) {
+    if (height > 0) {
+      return weight / (height * height);
+    } else {
+      return 0.0;
+    }
+  }
+
+  double calculateBodyFat(double weight,double height, double waist, double neck, double hip) {
+    final leanBodyMass = weight - (weight * (waist + neck - hip) / 100.0);
+    final bodyFat = weight - leanBodyMass;
+    return (bodyFat / weight) * 100.0;
+  }
+
+  double calculateLeanBodyMass(double weight, double bodyFat) {
+    return weight * (1 - (bodyFat / 100));
+  }
+
   void updateValues() {
-    final weight = double.parse(weightController.text);
-    final height = double.parse(heightController.text);
-    final waist = double.parse(waistController.text);
-    final neck = double.parse(neckController.text);
-    final hip = double.parse(hipController.text);
+    final weight = double.tryParse(weightController.text) ?? 0.0;
+    final height = double.tryParse(heightController.text) ?? 0.0;
+    final waist = double.tryParse(waistController.text) ?? 0.0;
+    final neck = double.tryParse(neckController.text) ?? 0.0;
+    final hip = double.tryParse(hipController.text) ?? 0.0;
 
     DB.saveUserData(UserData(
       weight: weight,
@@ -51,6 +81,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
+    double weight = double.tryParse(weightController.text) ?? 0.0;
+    double height = double.tryParse(heightController.text) ?? 0.0;
+    double waist = double.tryParse(waistController.text) ?? 0.0;
+    double neck = double.tryParse(neckController.text) ?? 0.0;
+    double hip = double.tryParse(hipController.text) ?? 0.0;
+
+    double bmi = calculateBMI(weight, height);
+    double bodyFat = calculateBodyFat(weight, height, waist, neck, hip);
+    double leanBodyMass = calculateLeanBodyMass(weight, bodyFat);
+    String healthStatus = getHealthStatus(bmi);
+
     return Scaffold(
       appBar: AppBar(
         title: Text('Perfil'),
@@ -70,11 +111,21 @@ class _ProfileScreenState extends State<ProfileScreen> {
               _buildField('Circunferencia del cuello (cm)', neckController),
               _buildField('Circunferencia de la cadera (cm)', hipController),
               SizedBox(height: 16),
-              Text('Índice de masa corporal:',style: TextStyle(color: Colors.white, fontSize: 18),),
+              Text('Índice de masa corporal: ${bmi.toStringAsFixed(2)}',
+                style: TextStyle(color: Colors.white, fontSize: 18),
+              ),
               SizedBox(height: 16),
-              Text('Porcentaje de grasa:',style: TextStyle(color: Colors.white, fontSize: 18),),
+              Text('Estado de salud: ${healthStatus}',
+                style: TextStyle(color: Colors.white, fontSize: 18),
+              ),
               SizedBox(height: 16),
-              Text('Porcentaje de masa magra:',style: TextStyle(color: Colors.white, fontSize: 18),),
+              Text('Porcentaje de grasa: ${bodyFat.toStringAsFixed(2)}%',
+                style: TextStyle(color: Colors.white, fontSize: 18),
+              ),
+              SizedBox(height: 16),
+              Text('Porcentaje de masa magra: ${leanBodyMass.toStringAsFixed(2)} kg',
+                style: TextStyle(color: Colors.white, fontSize: 18),
+              ),
             ],
           ),
         ),
@@ -108,7 +159,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               filled: true,
             ),
             onChanged: (value) {
-              updateValues(); // Llama a la función cuando el texto cambia
+              updateValues();
             },
           ),
         ],
