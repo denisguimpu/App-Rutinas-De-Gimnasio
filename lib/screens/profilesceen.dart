@@ -3,11 +3,13 @@ import '../database/db.dart';
 import '../database/userData.dart';
 
 class ProfileScreen extends StatefulWidget {
+  const ProfileScreen({super.key});
+
   @override
-  _ProfileScreenState createState() => _ProfileScreenState();
+  ProfileScreenState createState() => ProfileScreenState();
 }
 
-class _ProfileScreenState extends State<ProfileScreen> {
+class ProfileScreenState extends State<ProfileScreen> {
   TextEditingController weightController = TextEditingController();
   TextEditingController heightController = TextEditingController();
   TextEditingController waistController = TextEditingController();
@@ -98,14 +100,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Perfil'),
+        title: const Text('Perfil'),
         centerTitle: true,
         backgroundColor: Colors.black,
       ),
       backgroundColor: Colors.grey[900],
       body: SingleChildScrollView(
         child: Container(
-          padding: EdgeInsets.all(16.0),
+          padding: const EdgeInsets.all(16.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -114,22 +116,22 @@ class _ProfileScreenState extends State<ProfileScreen> {
               _buildField('Circunferencia de la cintura (cm)', waistController),
               _buildField('Circunferencia del cuello (cm)', neckController),
               _buildField('Circunferencia de la cadera (cm)', hipController),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               Text('Índice de masa corporal: ${bmi.toStringAsFixed(2)}',
-                style: TextStyle(color: Colors.white, fontSize: 18),
+                style: const TextStyle(color: Colors.white, fontSize: 18),
               ),
-              SizedBox(height: 16),
-              Text('Estado de salud: ${healthStatus}',
-                style: TextStyle(color: Colors.white, fontSize: 18),
+              const SizedBox(height: 16),
+              Text('Estado de salud: $healthStatus',
+                style: const TextStyle(color: Colors.white, fontSize: 18),
               ),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               Text('Porcentaje de grasa: ${bodyFat.toStringAsFixed(2)}%',
-                style: TextStyle(color: Colors.white, fontSize: 18),
+                style: const TextStyle(color: Colors.white, fontSize: 18),
               ),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               Text('Porcentaje de masa magra: ${leanBodyMass.toStringAsFixed(
                   2)} kg',
-                style: TextStyle(color: Colors.white, fontSize: 18),
+                style: const TextStyle(color: Colors.white, fontSize: 18),
               ),
             ],
           ),
@@ -146,7 +148,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         children: [
           Text(
             title,
-            style: TextStyle(
+            style: const TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.bold,
               color: Colors.white,
@@ -155,11 +157,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
           TextFormField(
             controller: controller,
             keyboardType: TextInputType.number,
-            style: TextStyle(fontSize: 16, color: Colors.black),
+            style: const TextStyle(fontSize: 16, color: Colors.black),
             decoration: InputDecoration(
               hintText: 'Ingrese $title',
-              contentPadding: EdgeInsets.all(12),
-              border: OutlineInputBorder(),
+              contentPadding: const EdgeInsets.all(12),
+              border: const OutlineInputBorder(),
               fillColor: Colors.white,
               filled: true,
             ),
