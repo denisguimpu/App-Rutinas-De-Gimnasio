@@ -14,6 +14,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
   TextEditingController neckController = TextEditingController();
   TextEditingController hipController = TextEditingController();
 
+
+
   @override
   void initState() {
     super.initState();
@@ -53,7 +55,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
     }
   }
 
-  double calculateBodyFat(double weight,double height, double waist, double neck, double hip) {
+  double calculateBodyFat(double weight, double height, double waist,
+      double neck, double hip) {
     final leanBodyMass = weight - (weight * (waist + neck - hip) / 100.0);
     final bodyFat = weight - leanBodyMass;
     return (bodyFat / weight) * 100.0;
@@ -78,6 +81,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       hip: hip,
     ));
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -123,7 +127,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 style: TextStyle(color: Colors.white, fontSize: 18),
               ),
               SizedBox(height: 16),
-              Text('Porcentaje de masa magra: ${leanBodyMass.toStringAsFixed(2)} kg',
+              Text('Porcentaje de masa magra: ${leanBodyMass.toStringAsFixed(
+                  2)} kg',
                 style: TextStyle(color: Colors.white, fontSize: 18),
               ),
             ],
@@ -159,7 +164,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
               filled: true,
             ),
             onChanged: (value) {
+              // Actualiza los valores y llama a setState para reconstruir el widget
               updateValues();
+              setState(() {}); // Esto reconstruirá el widget con los nuevos valores calculados
             },
           ),
         ],

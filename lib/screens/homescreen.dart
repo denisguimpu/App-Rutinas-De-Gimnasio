@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_app/database/rutina_db.dart';
 import 'package:flutter_app/database/db.dart';
 import 'package:flutter_app/screens/rutinadetallescreen.dart';
-
-import '../database/ejercicios_db.dart';
+import 'package:flutter_app/database/ejercicios_db.dart';
+import 'package:line_icons/line_icons.dart';
 
 class SplashScreen extends StatefulWidget {
   @override
@@ -55,7 +55,12 @@ class _SplashScreenState extends State<SplashScreen> {
           } else if (snapshot.hasError) {
             return Center(child: Text('Error: ${snapshot.error}'));
           } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return Center(child: Text('No hay rutinas almacenadas.', style: TextStyle(color: Colors.white),));
+            return Center(
+              child: Text(
+                'No hay rutinas almacenadas.',
+                style: TextStyle(color: Colors.white),
+              ),
+            );
           } else {
             return ListView.builder(
               itemCount: snapshot.data?.length,
@@ -64,34 +69,89 @@ class _SplashScreenState extends State<SplashScreen> {
                 return Card(
                   elevation: 3,
                   margin: EdgeInsets.all(8),
-                  color: Colors.grey[850], // Cambia el color del Card a grey[850]
+                  color: Colors.grey[850],
                   child: InkWell(
                     onTap: () {
                       Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) =>
-                            RutinaDetalleScreen(rutina: rutinaLV),
+                        builder: (context) => RutinaDetalleScreen(rutina: rutinaLV),
                       ));
                     },
-                    child: Padding(
-                      padding: EdgeInsets.all(16),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            '${rutinaLV?.nombre}',
-                            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white), // Cambia el color del texto a blanco
-                          ),
-                          SizedBox(height: 8),
-                          Text(
-                            'Ejercicios:',
-                            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white), // Cambia el color del texto a blanco
-                          ),
-                          Text(
-                            rutinaLV!.ejercicios.map((ejercicio) => ejercicio.name).join('\n'),
-                            style: TextStyle(fontSize: 16, color: Colors.white), // Cambia el color del texto a blanco
-                          ),
-                        ],
-                      ),
+                    child: Column( // Utilizamos un Column para alinear el título y el icono de papelera
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            Expanded(
+                              child: Padding(
+                                padding: EdgeInsets.all(16),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      '${rutinaLV?.nombre}',
+                                      style: TextStyle(
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.white),
+                                    ),
+                                    SizedBox(height: 8),
+                                    Text(
+                                      'Ejercicios:',
+                                      style: TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.white),
+                                    ),
+                                    Text(
+                                      rutinaLV!.ejercicios
+                                          .map((ejercicio) => ejercicio.name)
+                                          .join('\n'),
+                                      style: TextStyle(fontSize: 16, color: Colors.white),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                            IconButton(
+                              icon: Icon(LineIcons.trash, color: Colors.red),
+                              onPressed: () {
+                                showDialog(
+                                  context: context,
+                                  builder: (context) {
+                                    return AlertDialog(
+                                      title: Text('Eliminar Rutina'),
+                                      content: Text('¿Estás seguro de que quieres eliminar esta rutina y sus ejercicios?'),
+                                      actions: [
+                                        TextButton(
+                                          onPressed: () {
+                                            Navigator.of(context).pop(); // Cierra el cuadro de diálogo
+                                          },
+                                          child: Text('Cancelar'),
+                                        ),
+                                        TextButton(
+                                          onPressed: () async {
+                                            // Lógica para eliminar todos los ejercicios de la rutina
+                                            int result = await DB.deleteRutine(rutinaLV!);
+                                            if (result > 0) {
+                                              // La rutina se eliminó correctamente
+                                              // Ahora eliminamos todos los ejercicios relacionados
+                                              int deletedExercises = await DB.deleteEjerciciosByTitulo(rutinaLV!.nombre);
+                                            }
+                                            Navigator.of(context).pop(); // Cierra el cuadro de diálogo
+                                            // Vuelve a cargar la pantalla para reflejar la eliminación
+                                            setState(() {});
+                                          },
+                                          child: Text('Eliminar'),
+                                        ),
+                                      ],
+                                    );
+                                  },
+                                );
+                              },
+                            ),
+                          ],
+                        ),
+                      ],
                     ),
                   ),
                 );

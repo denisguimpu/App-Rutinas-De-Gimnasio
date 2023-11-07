@@ -74,6 +74,19 @@ class DB {
         .delete("ejercicios", where: "name = ?", whereArgs: [ejercicio.name]);
   }
 
+  static Future<int> deleteEjerciciosByTitulo(String titulo) async {
+    Database database = await openDB();
+    return await database.delete("ejercicios", where: "titulo = ?", whereArgs: [titulo]);
+  }
+
+  static Future<int> deleteRutine(Rutina rutina) async {
+    Database database = await openDB();
+
+    return database
+        .delete("rutinas", where: "nombre = ?", whereArgs: [rutina.nombre]);
+  }
+
+
   static Future<int> insertQuery(String query) async {
     Database database = await openDB();
     return database.rawInsert(query);
