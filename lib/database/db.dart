@@ -12,7 +12,7 @@ class DB {
         print(getDatabasesPath());
         // Crear la tabla de ejercicios
         db.execute(
-          'CREATE TABLE ejercicios (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT ,muscle TEXT,description TEXT, titulo TEXT);',
+          'CREATE TABLE ejercicios (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT ,muscle TEXT,description TEXT, titulo TEXT, repeticiones INTEGER, series INTEGER, pesoMax FLOAT);',
         );
 
         // Crear la tabla de user_data
@@ -110,6 +110,9 @@ class DB {
               muscle: ejerciciosMap[i]['muscle'],
               description: ejerciciosMap[i]['description'],
               titulo: ejerciciosMap[i]['titulo'],
+              repeticiones: ejerciciosMap[i]['repeticiones'],
+              series: ejerciciosMap[i]['series'],
+              pesoMax: ejerciciosMap[i]['pesoMax']
             ));
   }
 

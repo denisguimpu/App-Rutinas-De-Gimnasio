@@ -306,7 +306,10 @@ class MainScreenState extends State<MainScreen> {
                               name: element.name,
                               muscle: element.muscle,
                               description: element.description,
-                              titulo: titleController.text);
+                              titulo: titleController.text,
+                              repeticiones: 0,
+                              series: 0,
+                              pesoMax: 0);
                           DB.insert(ejercicio);
                         });
                         // Desseleccionar ejercicios después de guardar

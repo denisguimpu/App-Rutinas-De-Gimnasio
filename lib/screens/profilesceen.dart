@@ -18,6 +18,7 @@ class ProfileScreenState extends State<ProfileScreen> {
 
 
 
+
   @override
   void initState() {
     super.initState();
@@ -37,43 +38,13 @@ class ProfileScreenState extends State<ProfileScreen> {
     }
   }
 
-  String getHealthStatus(double bmi) {
-    if (bmi < 18.5) {
-      return 'Bajo peso';
-    } else if (bmi >= 18.5 && bmi < 24.9) {
-      return 'Peso normal';
-    } else if (bmi >= 25 && bmi < 29.9) {
-      return 'Sobrepeso';
-    } else {
-      return 'Obesidad';
-    }
-  }
-
-  double calculateBMI(double weight, double height) {
-    if (height > 0) {
-      return weight / (height * height);
-    } else {
-      return 0.0;
-    }
-  }
-
-  double calculateBodyFat(double weight, double height, double waist,
-      double neck, double hip) {
-    final leanBodyMass = weight - (weight * (waist + neck - hip) / 100.0);
-    final bodyFat = weight - leanBodyMass;
-    return (bodyFat / weight) * 100.0;
-  }
-
-  double calculateLeanBodyMass(double weight, double bodyFat) {
-    return weight * (1 - (bodyFat / 100));
-  }
-
   void updateValues() {
     final weight = double.tryParse(weightController.text) ?? 0.0;
     final height = double.tryParse(heightController.text) ?? 0.0;
     final waist = double.tryParse(waistController.text) ?? 0.0;
     final neck = double.tryParse(neckController.text) ?? 0.0;
     final hip = double.tryParse(hipController.text) ?? 0.0;
+
 
     DB.saveUserData(UserData(
       weight: weight,
@@ -92,6 +63,37 @@ class ProfileScreenState extends State<ProfileScreen> {
     double waist = double.tryParse(waistController.text) ?? 0.0;
     double neck = double.tryParse(neckController.text) ?? 0.0;
     double hip = double.tryParse(hipController.text) ?? 0.0;
+
+    String getHealthStatus(double bmi) {
+      if (bmi < 18.5) {
+        return 'Bajo peso';
+      } else if (bmi >= 18.5 && bmi < 24.9) {
+        return 'Peso normal';
+      } else if (bmi >= 25 && bmi < 29.9) {
+        return 'Sobrepeso';
+      } else {
+        return 'Obesidad';
+      }
+    }
+
+    double calculateBMI(double weight, double height) {
+      if (height > 0) {
+        return weight / (height * height);
+      } else {
+        return 0.0;
+      }
+    }
+
+    double calculateBodyFat(double weight, double height, double waist,
+        double neck, double hip) {
+      final leanBodyMass = weight - (weight * (waist + neck - hip) / 100.0);
+      final bodyFat = weight - leanBodyMass;
+      return (bodyFat / weight) * 100.0;
+    }
+
+    double calculateLeanBodyMass(double weight, double bodyFat) {
+      return weight * (1 - (bodyFat / 100));
+    }
 
     double bmi = calculateBMI(weight, height);
     double bodyFat = calculateBodyFat(weight, height, waist, neck, hip);
@@ -129,7 +131,7 @@ class ProfileScreenState extends State<ProfileScreen> {
                 style: const TextStyle(color: Colors.white, fontSize: 18),
               ),
               const SizedBox(height: 16),
-              Text('Porcentaje de masa magra: ${leanBodyMass.toStringAsFixed(
+              Text('Cantidad de masa magra: ${leanBodyMass.toStringAsFixed(
                   2)} kg',
                 style: const TextStyle(color: Colors.white, fontSize: 18),
               ),
